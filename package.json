@@ -1,19 +1,89 @@
 {
-  "name": "my-app",
-  "version": "0.1.0",
+  "name": "inventory-management-system",
+  "version": "1.0.0",
+  "description": "Inventory Management System by Airoxlab",
+  "author": "Airoxlab",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "electron": "node electron/start.js",
+    "electron:dev": "concurrently -k \"next dev\" \"wait-on http://localhost:3000 && node electron/start.js\"",
+    "electron:build": "next build && electron-builder",
+    "electron:build:win": "next build && electron-builder --win",
+    "electron:build:mac": "next build && electron-builder --mac",
+    "electron:build:linux": "next build && electron-builder --linux",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.84.0",
+    "lucide-react": "^0.554.0",
     "next": "16.0.4",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
   "devDependencies": {
+    "@electron/rebuild": "^4.0.1",
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "better-sqlite3": "^12.4.6",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^33.2.1",
+    "electron-builder": "^26.0.12",
+    "electron-serve": "^3.0.0",
+    "tailwindcss": "^4",
+    "wait-on": "^9.0.3"
+  },
+  "build": {
+    "appId": "com.airoxlab.inventory",
+    "productName": "Inventory Management System",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "out/**/*",
+      "public/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "database.db",
+        "to": "database.db"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "public/icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "public/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico",
+      "installerHeaderIcon": "public/icon.ico"
+    }
   }
 }
